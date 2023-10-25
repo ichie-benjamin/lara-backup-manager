@@ -44,57 +44,63 @@ class BackupManagerController extends BaseController
         $result = BackupManager::createBackup($type);
 
         // set status messages
-        if ($result['file'] === true) {
-            $message = 'Files Backup Taken Successfully';
-
-            $messages[] = [
-                'type' => 'success',
-                'message' => $message
-            ];
-
-            Session::flash('success', $message);
-
-            Log::info($message);
-        } else {
-            if (config('lara-backup-manager.backups.files.enable')) {
-                $message = 'Files Backup Failed';
+        if(isset($result['file'])){
+            if ($result['file'] === true) {
+                $message = 'Files Backup Taken Successfully';
 
                 $messages[] = [
-                    'type' => 'danger',
+                    'type' => 'success',
                     'message' => $message
                 ];
 
-                Log::error($message);
+                Session::flash('success', $message);
+
+                Log::info($message);
+            } else {
+                if (config('lara-backup-manager.backups.files.enable')) {
+                    $message = 'Files Backup Failed';
+
+                    $messages[] = [
+                        'type' => 'danger',
+                        'message' => $message
+                    ];
+
+                    Log::error($message);
+                }
             }
+            $mailBody .= $message;
+
         }
 
-        $mailBody .= $message;
 
-        if ($result['db'] === true) {
-            $message = 'Database Backup Taken Successfully';
-
-            $messages[] = [
-                'type' => 'success',
-                'message' => $message
-            ];
-
-            Session::flash('success', $message);
-
-            Log::info($message);
-        } else {
-            if (config('lara-backup-manager.backups.database.enable')) {
-                $message = 'Database Backup Failed';
+        if(isset($result['db'])){
+            if ($result['db'] === true) {
+                $message = 'Database Backup Taken Successfully';
 
                 $messages[] = [
-                    'type' => 'danger',
+                    'type' => 'success',
                     'message' => $message
                 ];
 
-                Log::error($message);
-            }
-        }
+                Session::flash('success', $message);
 
-        $mailBody .= '<br>' . $message;
+                Log::info($message);
+            } else {
+                if (config('lara-backup-manager.backups.database.enable')) {
+                    $message = 'Database Backup Failed';
+
+                    $messages[] = [
+                        'type' => 'danger',
+                        'message' => $message
+                    ];
+
+                    Log::error($message);
+                }
+            }
+
+            $mailBody .= '<br>' . $message;
+
+        }
 
         $this->sendMail($mailBody);
 

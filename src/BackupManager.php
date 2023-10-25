@@ -263,7 +263,8 @@ class BackupManager
             }
 
             # this will be used to verify later if restore was successful
-            DB::statement(" INSERT INTO verifybackup (id, verify_status) VALUES (1, 'backup') ON DUPLICATE KEY UPDATE verify_status = 'backup' ");
+            DB::statement('INSERT OR REPLACE INTO verifybackup (id, verify_status) VALUES (1, "backup")');
+
 
             $connection = [
                 'host' => config('database.connections.mysql.host'),
