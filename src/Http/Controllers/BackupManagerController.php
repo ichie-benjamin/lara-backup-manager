@@ -41,7 +41,16 @@ class BackupManagerController extends BaseController
         $messages = [];
 
         // create backups
-        $result = BackupManager::createBackup($type);
+        if(!$type){
+            $result = BackupManager::createBackup($type);
+        }else{
+            if($type == 'file'){
+                $result = BackupManager::backupFiles(true);
+            }
+            if($type == 'db'){
+                $result = BackupManager::backupDatabase(true);
+            }
+        }
 
         // set status messages
         if(isset($result['file'])){
