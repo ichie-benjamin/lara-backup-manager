@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'IchieBenjamin\\LaraBackupmanager\\' => array($baseDir . '/src'),
+    'IchieBenjamin\\LaraBackupManager\\' => array($baseDir . '/src'),
 );

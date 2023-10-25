@@ -57,7 +57,7 @@ return [
         'backup_path' => 'backups',
 
         // backup files name suffix
-        'backup_file_date_suffix' => 'M-d-Y',
+        'backup_file_date_suffix' => 'M-d-Y-H-i-s',
 
         // define number of days old backup files will be deleted before new backup
         'delete_old_backup_days' => 10
@@ -72,7 +72,7 @@ return [
          * Leave "mail_receivers" empty [] to not send any mail.
          */
         'mail_subject' => 'Lara BackupManager Alert',
-        'mail_receivers' => ['admin@example.com'],
+        'mail_receivers' => [],
     ],
 
 ];

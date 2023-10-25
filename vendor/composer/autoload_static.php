@@ -9,12 +9,12 @@ class ComposerStaticInit87977e02448698ecfe224b08b7eac7c7
     public static $prefixLengthsPsr4 = array (
         'I' => 
         array (
-            'IchieBenjamin\\LaraBackupmanager\\' => 32,
+            'IchieBenjamin\\LaraBackupManager\\' => 32,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'IchieBenjamin\\LaraBackupmanager\\' => 
+        'IchieBenjamin\\LaraBackupManager\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
