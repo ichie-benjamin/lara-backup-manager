@@ -297,7 +297,7 @@ class BackupManager
             }
 
             $command = 'cd ' . str_replace('\\', '/',
-                    base_path()) . " && $this->mysqldump $options $connectionOptions $tableOptions | gzip > $this->dBackupName";
+                    base_path()) . " && $this->mysqldump $options $connectionOptions $tableOptions | gzip > $this->dbBackupName";
             //exit($command);
 
             shell_exec($command . ' 2>&1');
