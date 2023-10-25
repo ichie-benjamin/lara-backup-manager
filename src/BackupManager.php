@@ -352,14 +352,14 @@ class BackupManager
                 // Execute the mysqldump command
                 exec($command);
 
-                $this->info(json_encode($command));
+                Log::info(json_encode($command));
 
                 if (file_exists(base_path($this->dbBackupName))) {
-                    $this->info('file exist');
+                    Log::info('file exist');
                     $localFilePath = base_path($this->dbBackupName);
                     $storagePath = $this->backupPath . $this->dbBackupName;
 
-                    $this->info($storagePath);
+                    Log::info($storagePath);
 
                     $storageLocal = Storage::createLocalDriver(['root' => base_path()]);
                     $file = $storageLocal->get($localFilePath);
