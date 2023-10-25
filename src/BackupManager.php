@@ -253,7 +253,7 @@ class BackupManager
             return false;
         }
     }
-    public function backupDatabase($bypass=false)
+    public function backupDatabase0($bypass=false)
     {
         if (config('lara-backup-manager.backups.database.enable') || $bypass) {
 
@@ -326,6 +326,61 @@ class BackupManager
         }
     }
 
+    public function backupDatabase($bypass = false)
+    {
+        if (config('lara-backup-manager.backups.database.enable') || $bypass) {
+            $backupPath = $this->backupPath . $this->dbBackupName;
+
+            // Check if the backup file already exists and delete it
+            if (Storage::disk($this->disk)->exists($backupPath)) {
+                Storage::disk($this->disk)->delete($backupPath);
+            }
+
+            // Use a try-catch block for better error handling
+            try {
+                DB::table('verifybackup')->updateOrInsert(['id' => 1], ['verify_status' => 'backup']);
+
+                $connection = config('database.connections.mysql');
+                $connectionOptions = "--user={$connection['username']} --password=\"{$connection['password']}\" --host={$connection['host']} {$connection['database']} ";
+                $options = "--single-transaction --max-allowed-packet=4096 --quick";
+
+                $itemsToBackup = config('lara-backup-manager.backups.database.tables');
+                if ($itemsToBackup) {
+                    $itemsToBackup[] = 'verifybackup';
+                    $tableOptions = implode(' ', $itemsToBackup);
+                } else {
+                    $tableOptions = '';
+                }
+
+                $command = "cd " . str_replace('\\', '/', base_path()) . " && {$this->mysqldump} {$options} {$connectionOptions} {$tableOptions} | gzip > {$this->dbBackupName}";
+                // Add error handling for shell execution
+                $output = shell_exec($command . ' 2>&1');
+                if ($output !== null) {
+                    throw new Exception("Error while executing the backup command: $output");
+                }
+
+                // Move the backup file to the storage disk
+                $localFilePath = base_path($this->dbBackupName);
+                $storageLocal = Storage::createLocalDriver(['root' => base_path()]);
+                $file = $storageLocal->get($this->dbBackupName);
+                Storage::disk($this->disk)->put($backupPath, $file);
+
+                // Delete the local backup file
+                $storageLocal->delete($this->dbBackupName);
+
+                // If this is a bypass operation, clean up old backups and return the status
+                if ($bypass === true) {
+                    $this->deleteOldBackups("db");
+                    return $this->getBackupStatus('db');
+                }
+            } catch (Exception $e) {
+                // Log and handle the exception
+                Log::error("Database backup failed: " . $e->getMessage());
+                // Optionally, re-throw the exception if you want to handle it at a higher level
+                // throw $e;
+            }
+        }
+    }
     protected function restoreFiles($file): void
     {
         if (Storage::disk($this->disk)->exists($this->backupPath . $file)) {
