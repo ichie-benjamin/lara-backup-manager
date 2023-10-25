@@ -408,9 +408,9 @@ class BackupManager
             $this->isBackupValid($this->dbBackupName, $this->disk, $this->backupPath, $okSizeBytes);
 
         if ($type === 'file') {
-            $dStatus = false;
+            return ['file' => $fStatus];
         } elseif ($type === 'db') {
-            $fStatus = false;
+            return ['db' => $dStatus];
         }
 
         return ['file' => $fStatus, 'db' => $dStatus];
