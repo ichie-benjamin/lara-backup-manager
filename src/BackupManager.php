@@ -29,7 +29,7 @@ class BackupManager
         $this->backupPath = config('lara-backup-manager.backups.backup_path') . DIRECTORY_SEPARATOR;
         $this->backupSuffix = date(strtolower(config('lara-backup-manager.backups.backup_file_date_suffix')));
         $this->fileBackupName = "file_$this->disk-$this->backupSuffix.tar";
-        $this->dbBackupName = "db_$this->disk.'_'.$this->backupSuffix.gz";
+        $this->dbBackupName = "db_$this->disk-$this->backupSuffix.gz";
 
         $this->mysql = config('lara-backup-manager.paths.mysql', 'mysql');
         $this->mysqldump = config('lara-backup-manager.paths.mysqldump', 'mysqldump');
