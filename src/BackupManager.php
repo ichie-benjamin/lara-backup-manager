@@ -328,49 +328,55 @@ class BackupManager
 
     public function backupDatabase($bypass = false)
     {
-        if (config('lara-backup-manager.backups.database.enable') || $bypass) {
-            $backupPath = $this->backupPath . $this->dbBackupName;
+        try {
+            if (config('lara-backup-manager.backups.database.enable') || $bypass) {
+                $backupPath = $this->backupPath . $this->dbBackupName;
 
-            // Check if the backup file already exists and delete it
-            if (Storage::disk($this->disk)->exists($backupPath)) {
-                Storage::disk($this->disk)->delete($backupPath);
+                // Check if the backup file already exists and delete it
+                if (Storage::disk($this->disk)->exists($backupPath)) {
+                    Storage::disk($this->disk)->delete($backupPath);
+                }
+
+                // Mark the backup as 'verify_status' in the database
+                DB::table('verifybackup')->updateOrInsert(['id' => 1], ['verify_status' => 'backup']);
+
+                $databaseConfig = config('database.connections.mysql');
+                $dbUsername = $databaseConfig['username'];
+                $dbPassword = $databaseConfig['password'];
+                $dbHost = $databaseConfig['host'];
+                $dbName = $databaseConfig['database'];
+
+                // Build the mysqldump command
+                $command = "mysqldump --user={$dbUsername} --password={$dbPassword} --host={$dbHost} {$dbName} | gzip > " . $this->dbBackupName;
+
+                // Execute the mysqldump command
+                exec($command);
+
+                if (file_exists(base_path($this->dbBackupName))) {
+                    $localFilePath = base_path($this->dbBackupName);
+                    $storagePath = $this->backupPath . $this->dbBackupName;
+
+                    $storageLocal = Storage::createLocalDriver(['root' => base_path()]);
+                    $file = $storageLocal->get($localFilePath);
+
+                    // Store the file in the designated storage disk
+                    Storage::disk($this->disk)->put($storagePath, $file);
+
+                    // Delete the local file
+                    $storageLocal->delete($localFilePath);
+                }
+
+                if ($bypass === true) {
+                    $this->deleteOldBackups("db");
+                    return $this->getBackupStatus('db');
+                }
             }
-
-            DB::table('verifybackup')->updateOrInsert(
-                ['id' => 1],
-                ['verify_status' => 'backup']
-            );
-
-            $databaseConfig = config('database.connections.mysql');
-            $dbUsername = $databaseConfig['username'];
-            $dbPassword = $databaseConfig['password'];
-            $dbHost = $databaseConfig['host'];
-            $dbName = $databaseConfig['database'];
-
-            $command = "mysqldump --user={$dbUsername} --password={$dbPassword} --host={$dbHost} {$dbName} | gzip > $this->dbBackupName";
-
-            exec($command);
-
-            if (file_exists(base_path($this->dbBackupName))) {
-                $storageLocal = Storage::createLocalDriver(['root' => base_path()]);
-                $file = $storageLocal->get($this->dbBackupName);
-
-                Storage::disk($this->disk)->put($this->backupPath . $this->dbBackupName, $file);
-
-                // delete local file
-                $storageLocal->delete($this->dbBackupName);
-
-            }
-
-            if ($bypass===true) {
-                $this->deleteOldBackups("db");
-
-                return $this->getBackupStatus('db');
-
-            }
-
+        } catch (Exception $e) {
+            // Handle exceptions and log errors
+            Log::error("Database backup failed: " . $e->getMessage());
         }
     }
+
     protected function restoreFiles($file): void
     {
         if (Storage::disk($this->disk)->exists($this->backupPath . $file)) {
