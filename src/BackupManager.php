@@ -253,7 +253,7 @@ class BackupManager
             return false;
         }
     }
-    public function backupDatabase($bypass=false)
+    public function backupDatabase00($bypass=false)
     {
         if (config('lara-backup-manager.backups.database.enable') || $bypass) {
 
@@ -331,7 +331,7 @@ class BackupManager
         }
     }
 
-    public function backupDatabase0($bypass = false)
+    public function backupDatabase($bypass = false)
     {
         try {
             if (config('lara-backup-manager.backups.database.enable') || $bypass) {
@@ -357,7 +357,7 @@ class BackupManager
                 // Execute the mysqldump command
                 exec($command);
 
-                Log::info(json_encode($command));
+//                Log::info(json_encode($command));
 
                 if (file_exists(base_path($this->dbBackupName))) {
                     Log::info('file exist');
