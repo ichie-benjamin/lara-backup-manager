@@ -14,7 +14,7 @@ class CreateLaraBackupVerifyTable extends Migration
     public function up()
     {
         Schema::create('verifybackup', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('verify_status');
         });
     }
