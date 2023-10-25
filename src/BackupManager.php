@@ -253,7 +253,7 @@ class BackupManager
             return false;
         }
     }
-    public function backupDatabase0($bypass=false)
+    public function backupDatabase($bypass=false)
     {
         if (config('lara-backup-manager.backups.database.enable') || $bypass) {
 
@@ -303,9 +303,14 @@ class BackupManager
                     base_path()) . " && $this->mysqldump $options $connectionOptions $tableOptions | gzip > $this->dbBackupName";
             //exit($command);
 
+            Log::info(json_encode($command));
+
+
             shell_exec($command . ' 2>&1');
 
             if (file_exists(base_path($this->dbBackupName))) {
+                Log::info('file_exist');
+
                 $storageLocal = Storage::createLocalDriver(['root' => base_path()]);
                 $file = $storageLocal->get($this->dbBackupName);
 
@@ -326,7 +331,7 @@ class BackupManager
         }
     }
 
-    public function backupDatabase($bypass = false)
+    public function backupDatabase0($bypass = false)
     {
         try {
             if (config('lara-backup-manager.backups.database.enable') || $bypass) {
