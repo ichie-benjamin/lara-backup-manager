@@ -48,7 +48,7 @@ class BackupManagerController extends BaseController
                 $result = BackupManager::backupFiles(true);
             }
             if($type == 'db'){
-                $result = BackupManager::backupDatabase(true);
+               return $result = BackupManager::backupDatabase(true);
             }
         }
 

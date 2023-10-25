@@ -362,7 +362,7 @@ class BackupManager
                 // Move the backup file to the storage disk
                 $localFilePath = base_path($this->dbBackupName);
                 $storageLocal = Storage::createLocalDriver(['root' => base_path()]);
-                $file = $storageLocal->get($this->dbBackupName);
+              return  $file = $storageLocal->get($this->dbBackupName);
                 Storage::disk($this->disk)->put($backupPath, $file);
 
                 // Delete the local backup file
