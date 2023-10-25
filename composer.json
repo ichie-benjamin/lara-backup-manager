@@ -1,0 +1,40 @@
+{
+    "name": "ichie-benjamin/lara-backup-manager",
+    "description": "A simple file and database backup and restore manager for laravel framework",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "IchieBenjamin\\LaraBackupManager\\": "src/"
+        }
+    },
+    "require": {
+        "illuminate/support": "~6|~7|~8|~9|~10",
+        "php": "^7.3 || ^8.0"
+    },
+    "authors": [
+        {
+            "name": "Ichie Benjamin",
+            "email": "ichiebenjaminchukwudi0@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "IchieBenjamin\\LaraBackupManager\\ServiceProvider"
+            ],
+            "aliases": {
+                "BackupManager": "IchieBenjamin\\LaraBackupManager\\Facades\\BackupManager"
+            }
+        }
+    },
+    "keywords": [
+        "Laravel",
+        "Backup",
+        "Restore",
+        "Database",
+        "Server",
+        "Easy laravel backups"
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
