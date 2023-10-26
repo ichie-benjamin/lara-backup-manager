@@ -253,7 +253,7 @@ class BackupManager
             return false;
         }
     }
-    public function backupDatabase00($bypass=false)
+    public function backupDatabase($bypass=false)
     {
         if (config('lara-backup-manager.backups.database.enable') || $bypass) {
 
@@ -331,7 +331,7 @@ class BackupManager
         }
     }
 
-    public function backupDatabase($bypass = false)
+    public function backupDatabase0($bypass = false)
     {
         try {
             if (config('lara-backup-manager.backups.database.enable') || $bypass) {
