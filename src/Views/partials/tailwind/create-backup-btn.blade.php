@@ -1,6 +1,6 @@
 <form action="{{ route('lara-backup-manager.create') }}" method="post" id="frmNew">
     @csrf
-    <button id="createBackupBtn" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm">Create Full Backup</button>
+    <button id="createBackupBtn" type="submit" class="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Full Backup</button>
 </form>
 
 
