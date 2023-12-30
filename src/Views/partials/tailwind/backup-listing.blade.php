@@ -12,28 +12,29 @@
 
         <form id="frm" action="{{ route('lara-backup-manager.restore_delete') }}" method="post">
             @csrf
-            <table class="min-w-full divide-y divide-gray-200">
+            <div class="overflow-x-auto rounded-lg border border-gray-200">
+                <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
             <thead>
             <tr>
-                <th style="width: 1%">#</th>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Size</th>
-                <th>Health</th>
-                <th style="width: 10%">Type</th>
-                <th style="width: 10%">Download</th>
-                <th style="width: 1%">Action</th>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900" style="width: 1%">#</th>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Name</th>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Date</th>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Size</th>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Health</th>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900" style="width: 10%">Type</th>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900" style="width: 10%">Download</th>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900" style="width: 1%">Action</th>
             </tr>
             </thead>
 
-            <tbody>
+            <tbody class="divide-y divide-gray-200">
             @foreach(BackupManager::getBackups() as $index => $backup)
                 <tr>
-                    <td style="text-align: center;">{{ ++$index }}</td>
-                    <td>{{ $backup['name'] }}</td>
-                    <td class="date">{{ $backup['date'] }}</td>
-                    <td>{{ $backup['size'] }}</td>
-                    <td style="text-align: center;">
+                    <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900" style="text-align: center;">{{ ++$index }}</td>
+                    <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{{ $backup['name'] }}</td>
+                    <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900 date">{{ $backup['date'] }}</td>
+                    <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{{ $backup['size'] }}</td>
+                    <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900" style="text-align: center;">
                         @php
                             $okSizeBytes = 1024;
                             $isOk = $backup['size_raw'] >= $okSizeBytes;
@@ -42,7 +43,7 @@
                         @endphp
                         <span class="badge text-white bg-{{ $icon }} text-{{ $icon }}">{{ $text }}</span>
                     </td>
-                    <td style="text-align: center;">
+                    <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900" style="text-align: center;">
                     <span class="badge text-white bg-{{ $backup['type'] === 'Files' ? 'primary' : 'success' }} text-{{ $backup['type'] === 'Files' ? 'primary' : 'success' }}">
                         {{ $backup['type'] }}
                     </span>
@@ -58,7 +59,8 @@
                 </tr>
             @endforeach
             </tbody>
-        </table>
+                </table>
+            </div>
 
         <br><br>
 
